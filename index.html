@@ -1,0 +1,193 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>For Tuhin 💛</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Caveat:wght@600;700&family=Outfit:wght@300;500;700&display=swap" rel="stylesheet">
+<style>
+:root{--night:#120e28;--plum:#2b1a4f;--gold:#ffcf6b;--rose:#ff7a9c;--cream:#fff4e6}
+*{box-sizing:border-box;margin:0;padding:0}
+html,body{height:100%}
+body{font-family:'Outfit',system-ui,sans-serif;color:var(--cream);background:radial-gradient(ellipse at 50% 120%,var(--plum),var(--night) 70%);overflow-x:hidden;min-height:100vh}
+canvas#sky,canvas#confetti{position:fixed;inset:0;width:100%;height:100%;pointer-events:none}
+canvas#confetti{z-index:20}
+section{position:relative;z-index:2;min-height:100vh;display:none;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:24px}
+section.on{display:flex}
+h1{font-family:'Caveat',cursive;font-weight:700;font-size:clamp(2.4rem,8vw,4.5rem);line-height:1.1;color:var(--gold);text-shadow:0 0 30px rgba(255,207,107,.35)}
+.sub{margin-top:12px;font-weight:300;font-size:clamp(1rem,3.5vw,1.25rem);opacity:.85;max-width:30ch}
+.clock{display:flex;gap:clamp(8px,3vw,22px);margin:36px 0 18px}
+.box{min-width:clamp(64px,19vw,110px);padding:18px 6px 12px;border-radius:22px;background:rgba(255,255,255,.06);border:1px solid rgba(255,207,107,.25);backdrop-filter:blur(6px)}
+.box b{display:block;font-size:clamp(2rem,9vw,3.8rem);font-weight:700;font-variant-numeric:tabular-nums;color:var(--cream)}
+.box span{font-size:.8rem;font-weight:300;opacity:.7}
+.hint{font-weight:300;opacity:.6;font-size:.95rem}
+.moon{font-size:3rem;margin-bottom:10px;filter:drop-shadow(0 0 18px var(--gold));animation:bob 4s ease-in-out infinite}
+@keyframes bob{50%{transform:translateY(-8px)}}
+
+/* celebration */
+#party h1{font-size:clamp(3rem,13vw,7.5rem)}
+#party h1 .l{display:inline-block;opacity:0;transform:translateY(-80px) rotate(-8deg);animation:drop .7s cubic-bezier(.3,1.6,.5,1) forwards}
+@keyframes drop{to{opacity:1;transform:none}}
+.name{font-family:'Caveat',cursive;font-size:clamp(2.6rem,10vw,5rem);color:var(--rose);margin-top:4px;opacity:0;animation:fade 1s 1.8s forwards}
+@keyframes fade{to{opacity:1}}
+.cake{margin-top:26px;opacity:0;animation:fade 1s 2.6s forwards;cursor:pointer;background:none;border:0;color:inherit;font:inherit}
+.cake svg{width:min(240px,60vw);height:auto;overflow:visible}
+.flame{transform-origin:120px 62px;animation:flick .25s infinite alternate;filter:drop-shadow(0 0 12px var(--gold))}
+.out .flame{display:none}
+@keyframes flick{from{transform:scale(1,1) rotate(-3deg)}to{transform:scale(.92,1.1) rotate(3deg)}}
+.tap{margin-top:8px;font-weight:300;opacity:.8}
+.card{display:none;margin:28px 0 12px;max-width:560px;text-align:left;padding:28px 26px;border-radius:26px;background:rgba(255,255,255,.07);border:1px solid rgba(255,207,107,.3);backdrop-filter:blur(8px);line-height:1.7;font-size:1.08rem}
+.card.show{display:block;animation:fade .9s forwards;opacity:0}
+.card p+p{margin-top:14px}.card p:first-child{font-family:"Caveat",cursive;font-size:1.9rem;color:var(--rose);text-align:center}
+.sign{font-family:'Caveat',cursive;font-size:1.9rem;color:var(--gold);margin-top:16px}
+.again{margin-top:22px;padding:12px 22px;border-radius:99px;border:1px solid var(--gold);background:transparent;color:var(--gold);font:500 1rem 'Outfit',sans-serif;cursor:pointer}
+.again:hover,.again:focus-visible{background:var(--gold);color:var(--night);outline:none}
+.balloon{position:fixed;bottom:-140px;z-index:3;width:54px;height:68px;border-radius:50% 50% 48% 48%;animation:rise linear forwards;pointer-events:none}
+.balloon::after{content:"";position:absolute;left:50%;top:100%;width:1px;height:50px;background:rgba(255,255,255,.4)}
+@keyframes rise{to{transform:translateY(-130vh) translateX(var(--dx))}}
+@media (prefers-reduced-motion:reduce){.moon,.flame{animation:none}.balloon{display:none}}
+</style>
+</head>
+<body>
+<canvas id="sky"></canvas>
+<canvas id="confetti"></canvas>
+
+<section id="wait" class="on">
+  <div class="moon" aria-hidden="true">🌙</div>
+  <h1>Tuhin, something special is coming…</h1>
+  <p class="sub">Stay right here. It opens at midnight.</p>
+  <div class="clock" role="timer" aria-live="off">
+    <div class="box"><b id="d">00</b><span>days</span></div>
+    <div class="box"><b id="h">00</b><span>hours</span></div>
+    <div class="box"><b id="m">00</b><span>minutes</span></div>
+    <div class="box"><b id="s">00</b><span>seconds</span></div>
+  </div>
+  <p class="hint">Don't close this page 💫</p>
+</section>
+
+<section id="party">
+  <h1 id="title" aria-label="Happy Birthday"></h1>
+  <div class="name" id="name"></div>
+  <button class="cake" id="cake" aria-label="Blow out the candle">
+    <svg viewBox="0 0 240 200">
+      <g class="flame"><path d="M120 28c14 16 12 30 0 34-12-4-14-18 0-34z" fill="#ffcf6b"/><path d="M120 44c6 7 5 13 0 15-5-2-6-8 0-15z" fill="#ff7a9c"/></g>
+      <rect x="116" y="60" width="8" height="34" rx="3" fill="#fff4e6"/>
+      <rect x="40" y="94" width="160" height="40" rx="12" fill="#ff7a9c"/>
+      <path d="M40 112c14 12 26-6 40 6s26-6 40 6 26-6 40 6 26-6 40 0v-10H40z" fill="#fff4e6"/>
+      <rect x="20" y="134" width="200" height="50" rx="14" fill="#7a4fd1"/>
+      <path d="M20 152c16 12 30-6 46 6s30-6 46 6 30-6 46 6 30-6 46 0v-12H20z" fill="#fff4e6" opacity=".9"/>
+      <ellipse cx="120" cy="188" rx="110" ry="8" fill="#000" opacity=".25"/>
+    </svg>
+    <div class="tap" id="tap">Tap the candle and make a wish 🕯️</div>
+  </button>
+  <div class="card" id="card"></div>
+  <button class="again" id="again" style="display:none">Celebrate again 🎉</button>
+</section>
+
+<script>
+/* ============ EDIT THESE ============ */
+const CONFIG = {
+  name: "Tuhin",                       // her name
+  from: "Tawsif",                      // your name
+  // 6 October 2026, 12:00 AM, Bangladesh time (UTC+6). Change the date/time/zone if needed.
+  target: "2026-10-06T00:00:00+06:00",
+  message: [
+    "Happy Birthday, my love, Tuhin ❤️",
+    "Today is the day the most special person in my life was born—the girl who became the queen of my heart. 👑❤️",
+    "I know the past two years haven't been easy for you. I know I've hurt you, disappointed you, and made you cry more times than I ever should have. There are things I've done and words I've said that I wish I could take back. I can't change the past, but I want you to know that I truly regret every moment when I became the reason for your sadness.",
+    "Through everything, you still stayed, loved me, cared for me, and gave me chances I probably didn't deserve. And honestly, that means more to me than I can ever explain.",
+    "On your birthday, I don't just want to say Happy Birthday. I want to say thank you—for loving me, for tolerating my mistakes, for being patient with me, and for being a beautiful part of my life.",
+    "I hope this new year of your life brings you the happiness, peace, success, and love that you deserve. And I hope I can become a better person for you—not just with promises, but through my actions.",
+    "Tuhin, you are not just my love. You are the queen of my heart, my favorite person, and someone I never want to lose. ❤️",
+    "I'm sorry for the pain I've caused you over these two years. I can't promise that I'll suddenly become perfect, but I can promise that I will keep trying to become the man who makes you feel loved, respected, safe, and valued.",
+    "May your smile always stay brighter than every sadness you've ever felt. And if life gives me the chance, I want to be one of the reasons behind that smile. ❤️",
+    "Happy Birthday, my Queen. 👑🎂❤️",
+    "I love you more than my words can ever explain.",
+    "And no matter how many times I've failed to show it properly, you have always had a very special place in my heart. ❤️"
+  ]
+};
+/* ==================================== */
+
+const $ = id => document.getElementById(id);
+const params = new URLSearchParams(location.search);
+let target = new Date(CONFIG.target).getTime();
+if (params.get('t')) target = Date.now() + (+params.get('t')) * 1000;   // ?t=10 → test with a 10-second countdown
+let partyStarted = false;
+
+/* starry sky */
+const sky = $('sky'), sc = sky.getContext('2d');
+let stars = [];
+function sizeSky(){ sky.width = innerWidth; sky.height = innerHeight;
+  stars = Array.from({length: Math.min(160, innerWidth/6)}, () => ({x:Math.random()*sky.width,y:Math.random()*sky.height,r:Math.random()*1.4+.3,p:Math.random()*6})); }
+function drawSky(t){ sc.clearRect(0,0,sky.width,sky.height);
+  for(const s of stars){ sc.globalAlpha = .35 + .65*Math.abs(Math.sin(t/1200 + s.p)); sc.fillStyle = '#fff4e6'; sc.beginPath(); sc.arc(s.x,s.y,s.r,0,7); sc.fill(); }
+  requestAnimationFrame(drawSky); }
+addEventListener('resize', sizeSky); sizeSky(); requestAnimationFrame(drawSky);
+
+/* countdown */
+const pad = n => String(n).padStart(2,'0');
+function tick(){
+  const left = target - Date.now();
+  if (left <= 0) { startParty(); return; }
+  const s = Math.floor(left/1000);
+  $('d').textContent = pad(Math.floor(s/86400));
+  $('h').textContent = pad(Math.floor(s%86400/3600));
+  $('m').textContent = pad(Math.floor(s%3600/60));
+  $('s').textContent = pad(s%60);
+  setTimeout(tick, 250);
+}
+
+/* confetti */
+const cv = $('confetti'), cc = cv.getContext('2d'); let bits = [], running = false;
+function sizeC(){ cv.width = innerWidth; cv.height = innerHeight; } addEventListener('resize', sizeC); sizeC();
+const COLORS = ['#ffcf6b','#ff7a9c','#fff4e6','#7a4fd1','#6be3ff'];
+function burst(n, x, y){
+  for(let i=0;i<n;i++) bits.push({x:x ?? Math.random()*cv.width, y:y ?? -20, vx:(Math.random()-.5)*(y?14:5), vy:y?-Math.random()*14-4:Math.random()*3+2,
+    w:Math.random()*8+5, h:Math.random()*5+3, a:Math.random()*6, va:(Math.random()-.5)*.3, c:COLORS[i%COLORS.length]});
+  if(!running){ running = true; loop(); }
+}
+function loop(){
+  cc.clearRect(0,0,cv.width,cv.height);
+  bits = bits.filter(b => b.y < cv.height + 30);
+  for(const b of bits){ b.x += b.vx; b.y += b.vy; b.vy += .12; b.vx *= .99; b.a += b.va;
+    cc.save(); cc.translate(b.x,b.y); cc.rotate(b.a); cc.fillStyle = b.c; cc.fillRect(-b.w/2,-b.h/2,b.w,b.h); cc.restore(); }
+  if(bits.length) requestAnimationFrame(loop); else running = false;
+}
+function balloons(n){
+  if (matchMedia('(prefers-reduced-motion:reduce)').matches) return;
+  for(let i=0;i<n;i++){ const b = document.createElement('div'); b.className = 'balloon';
+    b.style.left = Math.random()*95 + 'vw'; b.style.background = COLORS[i%COLORS.length];
+    b.style.animationDuration = (7+Math.random()*6) + 's'; b.style.animationDelay = (Math.random()*3) + 's';
+    b.style.setProperty('--dx', (Math.random()*80-40) + 'px');
+    document.body.appendChild(b); setTimeout(() => b.remove(), 16000); }
+}
+
+/* the surprise */
+function startParty(){
+  if (partyStarted) return; partyStarted = true;
+  document.title = 'Happy Birthday ' + CONFIG.name + '! 🎂';
+  $('wait').classList.remove('on'); $('party').classList.add('on');
+  $('name').textContent = CONFIG.name + ' 💛';
+  const t = $('title'); t.innerHTML = '';
+  'Happy Birthday!'.split('').forEach((ch,i) => { const s = document.createElement('span');
+    s.className = 'l'; s.style.animationDelay = (i*.07) + 's'; s.innerHTML = ch === ' ' ? '&nbsp;' : ch; t.appendChild(s); });
+  burst(160); balloons(14);
+  setTimeout(() => burst(90), 1200);
+}
+$('cake').addEventListener('click', () => {
+  const c = $('cake'); if (c.classList.contains('out')) return;
+  c.classList.add('out'); $('tap').textContent = 'Your wish is on its way ✨';
+  burst(140, innerWidth/2, innerHeight*.6); balloons(10);
+  const card = $('card');
+  card.innerHTML = CONFIG.message.map(p => '<p>' + p + '</p>').join('') + '<div class="sign">— ' + CONFIG.from + '</div>';
+  card.classList.add('show'); $('again').style.display = 'inline-block';
+  setTimeout(() => card.scrollIntoView({behavior:'smooth', block:'center'}), 300);
+});
+$('again').addEventListener('click', () => { burst(180); balloons(12); });
+
+if (params.has('preview')) startParty(); else tick();   // ?preview → jump straight to the surprise
+</script>
+</body>
+</html>
